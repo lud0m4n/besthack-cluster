@@ -1,0 +1,8 @@
+/clustered_messages.csv
+/elbow_data.csv
+/embeddings.npy
+/kmeans_model.pkl
+/sorted_clusters.pbix
+/tsne_data.csv
+/venv
+/__pycache__
