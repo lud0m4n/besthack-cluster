@@ -49,7 +49,7 @@ def classify_message():
     cluster_label = kmeans.predict([embedding])[0]
     cluster_center = kmeans.cluster_centers_[cluster_label]
     distance = np.linalg.norm(embedding - cluster_center)
-    threshold = 10
+    threshold = 15
     cluster_data = pd.read_csv('data/clustered_messages.csv')
     cluster_counts = cluster_data['cluster'].value_counts().reset_index()
     cluster_counts.columns = ['cluster', 'count']
@@ -62,7 +62,8 @@ def classify_message():
         }
     else:
         response = {
-            "message": "Message does not fit into any existing cluster."
+            "cluster_index": 14,
+            "cluster_frequency": 0
         }
 
     return jsonify(response)  # Возвращаем результат также локальному клиенту
