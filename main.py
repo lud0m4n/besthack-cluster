@@ -18,7 +18,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 # Загрузка данных
-with open("dataset_hack.json", "r", encoding="utf-8") as file:
+with open("/data/dataset_hack.json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
 # Создание DataFrame
@@ -42,22 +42,13 @@ tokenizer = AutoTokenizer.from_pretrained("cointegrated/LaBSE-en-ru")
 model = AutoModel.from_pretrained("cointegrated/LaBSE-en-ru")
 
 def embedding(messages):
-    filename = 'embeddings.npy'
-    # Проверяем, существует ли файл с векторами
-    if os.path.exists(filename):
-        print("Loading embeddings from file...")
-        embeddings = np.load(filename)
-    else:
-        print("Calculating embeddings...")
-        embeddings_list = []
-        for message in messages:
-            encoded_input = tokenizer(message, padding=True, truncation=True, max_length=64, return_tensors='pt')
-            with torch.no_grad():
-                model_output = model(**encoded_input)
-            embeddings_list.append(model_output.pooler_output[0].numpy())
-        embeddings = np.asarray(embeddings_list)
-        np.save(filename, embeddings)  # Сохраняем векторы в файл
-
+    embeddings_list = []
+    for message in messages:
+        encoded_input = tokenizer(message, padding=True, truncation=True, max_length=64, return_tensors='pt')
+        with torch.no_grad():
+            model_output = model(**encoded_input)
+        embeddings_list.append(model_output.pooler_output[0].numpy())
+    embeddings = np.asarray(embeddings_list)
     return embeddings
 
 
@@ -80,7 +71,7 @@ elbow_data = pd.DataFrame({
     'Clusters': clusters,
     'Inertia': inertia
 })
-elbow_filename = 'elbow_data.csv'
+elbow_filename = '/data/elbow_data.csv'
 elbow_data.to_csv(elbow_filename, index=False)
 print(f"Elbow data saved to {elbow_filename}.")
 #
@@ -102,7 +93,7 @@ plt.show()
 
 
 # Сохранение модели KMeans
-kmeans_model_filename = 'kmeans_model.pkl'
+kmeans_model_filename = '/data/kmeans_model.pkl'
 with open(kmeans_model_filename, 'wb') as file:
     pickle.dump(kmeans, file)
 
@@ -113,7 +104,7 @@ tsne = TSNE(n_components=2, random_state=42)
 embeddings_2d = tsne.fit_transform(embeddings)
 tsne_data = pd.DataFrame(embeddings_2d, columns=['t-SNE Feature 1', 't-SNE Feature 2'])
 tsne_data['cluster'] = df['cluster']
-tsne_filename = 'tsne_data.csv'
+tsne_filename = '/data/tsne_data.csv'
 tsne_data.to_csv(tsne_filename, index=False)
 print(f"t-SNE data saved to {tsne_filename}.")
 # Визуализация
@@ -128,7 +119,7 @@ plt.show()
 for cluster in sorted(df['cluster'].unique()):
     print(f"Cluster {cluster}:")
     print(df[df['cluster'] == cluster]['message'].head())
-csv_filename = 'clustered_messages.csv'
+csv_filename = '/data/clustered_messages.csv'
 df.to_csv(csv_filename, index=False)
 print(f"Data saved to {csv_filename}.")
 

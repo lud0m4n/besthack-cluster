@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 tokenizer = AutoTokenizer.from_pretrained("cointegrated/LaBSE-en-ru")
 model = AutoModel.from_pretrained("cointegrated/LaBSE-en-ru")
-with open('kmeans_model.pkl', 'rb') as file:
+with open('/data/kmeans_model.pkl', 'rb') as file:
     kmeans = pickle.load(file)
 
 def preprocess_text(text):
