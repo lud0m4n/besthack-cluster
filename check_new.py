@@ -9,7 +9,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import re
 import string
-
+from dotenv import load_dotenv
 load_dotenv()
 app = Flask(__name__)
 
