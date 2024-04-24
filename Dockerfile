@@ -1,12 +1,11 @@
-FROM python:3.9-alpine
+FROM python:3.9
 
 RUN apk --no-cache add gcc musl-dev libffi-dev g++ make
-RUN pip install --upgrade pip
 
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install torch
+
 RUN pip install -r requirements.txt
 
 COPY . .
