@@ -15,8 +15,6 @@ app = Flask(__name__)
 
 tokenizer = AutoTokenizer.from_pretrained("cointegrated/LaBSE-en-ru")
 model = AutoModel.from_pretrained("cointegrated/LaBSE-en-ru")
-with open('data/kmeans_model.pkl', 'rb') as file:
-    kmeans = pickle.load(file)
 
 def preprocess_text(text):
     text = text.lower()
@@ -37,6 +35,8 @@ def get_message_embedding(message):
 
 @app.route('/cluster', methods=['POST'])
 def classify_message():
+    with open('data/kmeans_model.pkl', 'rb') as file:
+        kmeans = pickle.load(file)
     data = request.get_json()
     new_message = data['message']
     embedding = get_message_embedding(new_message)
