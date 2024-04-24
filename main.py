@@ -18,7 +18,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 # Загрузка данных
-with open("/data/dataset_hack.json", "r", encoding="utf-8") as file:
+with open("data/dataset_hack.json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
 # Создание DataFrame
@@ -71,7 +71,7 @@ elbow_data = pd.DataFrame({
     'Clusters': clusters,
     'Inertia': inertia
 })
-elbow_filename = '/data/elbow_data.csv'
+elbow_filename = 'data/elbow_data.csv'
 elbow_data.to_csv(elbow_filename, index=False)
 print(f"Elbow data saved to {elbow_filename}.")
 #
@@ -93,7 +93,7 @@ plt.show()
 
 
 # Сохранение модели KMeans
-kmeans_model_filename = '/data/kmeans_model.pkl'
+kmeans_model_filename = 'data/kmeans_model.pkl'
 with open(kmeans_model_filename, 'wb') as file:
     pickle.dump(kmeans, file)
 
@@ -104,7 +104,7 @@ tsne = TSNE(n_components=2, random_state=42)
 embeddings_2d = tsne.fit_transform(embeddings)
 tsne_data = pd.DataFrame(embeddings_2d, columns=['t-SNE Feature 1', 't-SNE Feature 2'])
 tsne_data['cluster'] = df['cluster']
-tsne_filename = '/data/tsne_data.csv'
+tsne_filename = 'data/tsne_data.csv'
 tsne_data.to_csv(tsne_filename, index=False)
 print(f"t-SNE data saved to {tsne_filename}.")
 # Визуализация
@@ -119,7 +119,7 @@ plt.show()
 for cluster in sorted(df['cluster'].unique()):
     print(f"Cluster {cluster}:")
     print(df[df['cluster'] == cluster]['message'].head())
-csv_filename = '/data/clustered_messages.csv'
+csv_filename = 'data/clustered_messages.csv'
 df.to_csv(csv_filename, index=False)
 print(f"Data saved to {csv_filename}.")
 
