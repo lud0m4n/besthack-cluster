@@ -59,7 +59,7 @@ def classify_message():
     # Отправляем результат на другой сервер
     try:
         rest_url = os.getenv('PY_REST_URL')
-        send_url = 'https://{rest_url}/cluster'
+        send_url = f'https://{rest_url}/cluster'
         requests.post(send_url, json=response)
     except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем ошибку, если что-то пошло не так
@@ -75,7 +75,7 @@ def run_main():
         if result.returncode == 0:
             # Если скрипт выполнен успешно, отправляем уведомление
             rest_url = os.getenv('PY_REST_URL')
-            notify_url = 'https://{rest_url}/train'
+            notify_url = f'https://{rest_url}/train'
             notify_response = requests.post(notify_url, json={'status': 'completed', 'output': result.stdout})
 
             # Проверяем статус ответа от сервера уведомлений
