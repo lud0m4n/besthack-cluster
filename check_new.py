@@ -11,6 +11,8 @@ import re
 import string
 from dotenv import load_dotenv
 import os
+import subprocess
+import pandas as pd
 
 load_dotenv()
 app = Flask(__name__)
@@ -39,6 +41,7 @@ def get_message_embedding(message):
 def classify_message():
     with open('data/kmeans_model.pkl', 'rb') as file:
         kmeans = pickle.load(file)
+    
     data = request.get_json()
     new_message = data['message']
     embedding = get_message_embedding(new_message)
@@ -47,9 +50,14 @@ def classify_message():
     cluster_center = kmeans.cluster_centers_[cluster_label]
     distance = np.linalg.norm(embedding - cluster_center)
     threshold = 10
+    cluster_data = pd.read_csv('data/clustered_messages.csv')
+    cluster_counts = cluster_data['cluster'].value_counts().reset_index()
+    cluster_counts.columns = ['cluster', 'count']
+    # Ответ сервера
     if distance < threshold:
         response = {
-            "message": f"Message is classified into cluster {cluster_label} with distance {distance}."
+            "cluster_index": cluster_label,
+            "cluster_frequency": cluster_counts.loc[cluster_counts['cluster'] == cluster_label, 'count'].iloc[0]
         }
     else:
         response = {
@@ -67,7 +75,7 @@ def classify_message():
     return jsonify(response)  # Возвращаем результат также локальному клиенту
 
 @app.route('/train', methods=['GET'])
-def run_main():
+def train():
     try:
         # Запускаем main.py с помощью subprocess.run
         result = subprocess.run(['python', 'main.py'], capture_output=True, text=True)
