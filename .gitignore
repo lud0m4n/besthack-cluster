@@ -7,3 +7,4 @@
 /venv
 /__pycache__
 /dash_app.py
+/.env

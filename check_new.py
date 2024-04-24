@@ -10,6 +10,7 @@ from nltk.stem import WordNetLemmatizer
 import re
 import string
 
+load_dotenv()
 app = Flask(__name__)
 
 tokenizer = AutoTokenizer.from_pretrained("cointegrated/LaBSE-en-ru")
@@ -55,7 +56,8 @@ def classify_message():
 
     # Отправляем результат на другой сервер
     try:
-        send_url = 'http://localhost:8081/cluster'
+        rest_url = os.getenv('PY_REST_URL')
+        send_url = 'https://{rest_url}/cluster'
         requests.post(send_url, json=response)
     except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем ошибку, если что-то пошло не так
@@ -63,4 +65,4 @@ def classify_message():
     return jsonify(response)  # Возвращаем результат также локальному клиенту
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=os.getenv('PY_PORT'))
