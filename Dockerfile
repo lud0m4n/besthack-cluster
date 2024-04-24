@@ -1,7 +1,12 @@
 FROM python:3.9
 
-RUN apk --no-cache add gcc musl-dev libffi-dev g++ make
-
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libc6-dev \
+    libffi-dev \
+    g++ \
+    make
+    
 WORKDIR /app
 
 COPY requirements.txt .
