@@ -1,4 +1,4 @@
-FROM python:3.12.3-alpine
+FROM python:3.11-alpine
 
 RUN apk --no-cache add gcc musl-dev libffi-dev g++ make
 
