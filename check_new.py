@@ -64,5 +64,27 @@ def classify_message():
 
     return jsonify(response)  # Возвращаем результат также локальному клиенту
 
+@app.route('/train', methods=['GET'])
+def run_main():
+    try:
+        # Запускаем main.py с помощью subprocess.run
+        result = subprocess.run(['python', 'main.py'], capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            # Если скрипт выполнен успешно, отправляем уведомление
+            rest_url = os.getenv('PY_REST_URL')
+            notify_url = 'https://{rest_url}/train'
+            notify_response = requests.post(notify_url, json={'status': 'completed', 'output': result.stdout})
+
+            # Проверяем статус ответа от сервера уведомлений
+            if notify_response.status_code == 200:
+                return jsonify({'status': 'success', 'output': result.stdout, 'notify': 'Notification sent successfully'}), 200
+            else:
+                return jsonify({'status': 'success', 'output': result.stdout, 'notify': 'Failed to send notification'}), 200
+        else:
+            return jsonify({'status': 'error', 'output': result.stderr}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv('PY_PORT'))
