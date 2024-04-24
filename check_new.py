@@ -53,11 +53,12 @@ def classify_message():
     cluster_data = pd.read_csv('data/clustered_messages.csv')
     cluster_counts = cluster_data['cluster'].value_counts().reset_index()
     cluster_counts.columns = ['cluster', 'count']
+    cluster_count = cluster_counts.loc[cluster_counts['cluster'] == cluster_label, 'count'].iloc[0]
     # Ответ сервера
     if distance < threshold:
         response = {
-            "cluster_index": cluster_label,
-            "cluster_frequency": cluster_counts.loc[cluster_counts['cluster'] == cluster_label, 'count'].iloc[0]
+            "cluster_index": int(cluster_label),
+            "cluster_frequency": int(cluster_count)
         }
     else:
         response = {
