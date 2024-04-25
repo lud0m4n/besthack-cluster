@@ -49,7 +49,7 @@ def classify_message():
     cluster_label = kmeans.predict([embedding])[0]
     cluster_center = kmeans.cluster_centers_[cluster_label]
     distance = np.linalg.norm(embedding - cluster_center)
-    threshold = 15
+    threshold = 11
     cluster_data = pd.read_csv('data/clustered_messages.csv')
     cluster_counts = cluster_data['cluster'].value_counts().reset_index()
     cluster_counts.columns = ['cluster', 'count']
