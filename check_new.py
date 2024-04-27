@@ -71,10 +71,10 @@ def classify_message():
         }
     else:
         response = {
-            "cluster_index": 14,  # Предполагаемый индекс для несоответствия
+            "cluster_index": 13,  # Предполагаемый индекс для несоответствия
             "cluster_frequency": 0,
-            "average_duration": 0.0,
-            "average_reaction": 0.0
+            "average_duration": float(stats_data.at[cluster_label, 'AvgDuration']),
+            "average_reaction": float(stats_data.at[cluster_label, 'AvgReaction'])
         }
 
     return jsonify(response)
