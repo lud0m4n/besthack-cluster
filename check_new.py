@@ -50,23 +50,35 @@ def classify_message():
     cluster_center = kmeans.cluster_centers_[cluster_label]
     distance = np.linalg.norm(embedding - cluster_center)
     threshold = 11
+
+    # Чтение данных о частоте кластеров
     cluster_data = pd.read_csv('data/clustered_messages.csv')
     cluster_counts = cluster_data['cluster'].value_counts().reset_index()
     cluster_counts.columns = ['cluster', 'count']
     cluster_count = cluster_counts.loc[cluster_counts['cluster'] == cluster_label, 'count'].iloc[0]
+
+    # Чтение средней продолжительности и времени реакции из output.csv
+    stats_data = pd.read_csv('data/output.csv')
+    stats_data.set_index('ClusterIndex', inplace=True)
+
     # Ответ сервера
     if distance < threshold:
         response = {
             "cluster_index": int(cluster_label),
-            "cluster_frequency": int(cluster_count)
+            "cluster_frequency": int(cluster_count),
+            "average_duration": float(stats_data.at[cluster_label, 'AvgDuration']),
+            "average_reaction": float(stats_data.at[cluster_label, 'AvgReaction'])
         }
     else:
         response = {
-            "cluster_index": 14,
-            "cluster_frequency": 0
+            "cluster_index": 14,  # Предполагаемый индекс для несоответствия
+            "cluster_frequency": 0,
+            "average_duration": 0.0,
+            "average_reaction": 0.0
         }
 
-    return jsonify(response)  # Возвращаем результат также локальному клиенту
+    return jsonify(response)
+
 
 @app.route('/train', methods=['GET'])
 def train():
