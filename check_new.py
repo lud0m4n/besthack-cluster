@@ -86,6 +86,7 @@ def classify_message():
     else:
         response = {
             "cluster_index": 13,  # Предполагаемый индекс для несоответствия
+            "cluster_name": cluster_dict[13],
             "cluster_frequency": 0,
             "average_duration": float(stats_data.at[cluster_label, 'AvgDuration']),
             "average_reaction": float(stats_data.at[cluster_label, 'AvgReaction'])
