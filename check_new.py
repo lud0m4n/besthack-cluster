@@ -60,11 +60,25 @@ def classify_message():
     # Чтение средней продолжительности и времени реакции из output.csv
     stats_data = pd.read_csv('data/output.csv')
     stats_data.set_index('ClusterIndex', inplace=True)
-
+    cluster_dict = {0: "Возврат продавцу",
+                    1: "Убрать уведомление после выплаты",
+                    2: "Нет денег завис статус",
+                    3: "Ошибка статуса", 
+                    4: "Доставка и API",
+                    5: "Политика возврата отказ нет денег",
+                    6: "Не отображается на возврат",
+                    7: "Убрать отклоненное уведомление",
+                    8: "Убрать уведомление компенсация", 
+                    9: "Перевести статус",
+                    10: "Зависли деньги",
+                    11: "Отказ нет денег",
+                    12: "Убрать уведомление",
+                    13: "Другое"}
     # Ответ сервера
     if distance < threshold:
         response = {
             "cluster_index": int(cluster_label),
+            "cluster_name": cluster_dict[int(cluster_label)],
             "cluster_frequency": int(cluster_count),
             "average_duration": float(stats_data.at[cluster_label, 'AvgDuration']),
             "average_reaction": float(stats_data.at[cluster_label, 'AvgReaction'])
